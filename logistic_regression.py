@@ -7,7 +7,7 @@ y_train = processor.y_train
 X_test = processor.X_test
 y_test = processor.y_test
 
-classifier = LogisticRegression()
+classifier = LogisticRegression(max_iter = 500)
 
 classifier.fit(X_train, y_train)
 print(classifier.score(X_test, y_test))

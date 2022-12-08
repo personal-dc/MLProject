@@ -19,15 +19,19 @@ def map_data(df):
     win_map = {'W':1, 'L':0}
     loc_map = {'H':1, 'A':0}
     shot_made_map = {'made':1, 'missed': 0}
+    two_pt_map = {2:1, 3: 0}
     new_wins = df['W'].map(win_map)
     new_loc = df['LOCATION'].map(loc_map)
     new_shot_made = df['SHOT_RESULT'].map(shot_made_map)
+    new_2_pt = df['PTS_TYPE']
     df.update(new_wins)
     df.update(new_loc)
     df.update(new_shot_made)
+    df.update(new_2_pt)
     df['SHOT_CLOCK'] = df['SHOT_CLOCK'].map(lambda time : shot_clock_map(time))
+    df['GAME_CLOCK'] = df['GAME_CLOCK'].map(lambda x: int(x.split(":")[0])*60 + int(x.split(":")[1]))
 
-def convert_to_logistcsvm(df):
+def convert_to_logisticsvm(df):
     global X_train
     global y_train
     global X_test
@@ -46,13 +50,13 @@ def convert_to_logistcsvm(df):
     y_test = y_test.astype('int')
 
 def go():
-    convert_to_logistcsvm(processed_df)
+    convert_to_logisticsvm(processed_df)
 
 
 nba_df = pd.read_csv("./shot_logs.csv")
 # processed_df = nba_df.drop(['MATCHUP', 'GAME_ID', 'player_id', 'CLOSEST_DEFENDER_PLAYER_ID'], axis = 1)
-processed_df = nba_df.drop(['MATCHUP', 'GAME_ID', 'GAME_CLOCK', 'player_id', 'CLOSEST_DEFENDER_PLAYER_ID', 'FGM', 'PTS', 'FINAL_MARGIN', 'PERIOD', 'SHOT_NUMBER', 'CLOSEST_DEFENDER', 'player_name'], axis = 1)
+processed_df = nba_df.drop(['MATCHUP', 'GAME_ID', 'player_id', 'CLOSEST_DEFENDER_PLAYER_ID', 'FGM', 'PTS', 'CLOSEST_DEFENDER', 'player_name'], axis = 1)
 
 # get_stats(processed_df)
 # get_stats(processed_df)
-go()
+# go()
