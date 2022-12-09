@@ -1,13 +1,16 @@
 import pandas as pd
+import player_scrape as ps
 from sklearn.model_selection import train_test_split
 
 def get_stats(df):
-    print(df)
+    # print(df)
     column_names = list(df.columns.values)
-    print(column_names)
-    # name_set = set()
-    # for item in df['player_name'].iteritems():
-    #     name_set.add(item[1])
+    # print(column_names)
+    global name_set
+    name_set = set()
+    for item in df['player_name'].iteritems():
+        name_set.add(item[1])
+    print(name_set)
 
 def shot_clock_map(time):
     if pd.isna(float(time)):
@@ -55,8 +58,10 @@ def go():
 
 nba_df = pd.read_csv("./shot_logs.csv")
 # processed_df = nba_df.drop(['MATCHUP', 'GAME_ID', 'player_id', 'CLOSEST_DEFENDER_PLAYER_ID'], axis = 1)
-processed_df = nba_df.drop(['MATCHUP', 'GAME_ID', 'player_id', 'CLOSEST_DEFENDER_PLAYER_ID', 'FGM', 'PTS', 'CLOSEST_DEFENDER', 'player_name'], axis = 1)
+processed_df = nba_df.drop(['MATCHUP', 'GAME_ID', 'player_id', 'CLOSEST_DEFENDER_PLAYER_ID', 'FGM', 'PTS', 'CLOSEST_DEFENDER'], axis = 1)
 
-# get_stats(processed_df)
-# get_stats(processed_df)
+get_stats(processed_df)
 # go()
+
+name_dict = ps.get_ratings(name_set)
+print(name_dict)
