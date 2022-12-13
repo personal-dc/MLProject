@@ -26,7 +26,7 @@ y_test = torch.from_numpy(processor.y_test.astype(int)).type(torch.LongTensor)
 
 ds = TensorDataset(X_train, y_train)
 ts = TensorDataset(X_test, y_test)
-batch_size = 64
+batch_size = 50
 
 train_dataLoader = DataLoader(ds, batch_size=batch_size)
 test_dataLoader = DataLoader(ts, batch_size=batch_size)
@@ -37,7 +37,15 @@ class BBallNeuralNet(nn.Module):
         self.linear_relu_stack = nn.Sequential(
             nn.Linear(13, 13),
             nn.Identity(),
-            nn.Linear(13, 128),
+            nn.Linear(13, 256),
+            nn.ReLU(),
+            nn.Linear(256, 256),
+            nn.ReLU(),
+            nn.Linear(256, 256),
+            nn.ReLU(),
+            nn.Linear(256, 256),
+            nn.ReLU(),
+            nn.Linear(256, 256),
             nn.ReLU(),
             nn.Linear(128, 2)
         )
@@ -88,7 +96,7 @@ def test(dataloader, model, loss_fn):
     correct /= size
     print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
 
-epochs = 15
+epochs = 50
 for t in range(epochs):
     print(f"Epoch {t+1}\n-------------------------------")
     train(train_dataLoader, model, loss_fn, optimizer)
