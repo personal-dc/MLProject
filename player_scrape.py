@@ -29,6 +29,40 @@ def make_name_dict():
         # Extract the player name and rating from the cells
         name_dict[str(name_cell.text.strip()).lower()] = int(rating_cell.text.strip())
 
+        #manually adding
+        name_dict["greg smith"] = 61
+        name_dict["dirk nowtizski"] = 84
+        name_dict["time hardaway jr"] = 69
+        name_dict["nikola mirotic"] = 75
+        name_dict["mo williams"] = 74
+        name_dict["steve adams"] = 74
+        name_dict["mnta ellis"] = 82
+        name_dict["travis wear"] = 66
+        name_dict["dwayne wade"] = 86
+        name_dict["al farouq aminu"] = 74
+        name_dict["dennis schroder"] = 70
+        name_dict["kostas papanikolaou"] = 73
+        name_dict["nene hilario"] = 79
+        name_dict["shawne williams"] = 66
+        name_dict["carlos boozer"] = 78
+        name_dict["nerles noel"] = 76
+        name_dict["lou williams"] = 77
+        name_dict["beno urdih"] = 75
+        name_dict["jon ingles"] = 69
+        name_dict["hedo turkoglu"] = 71
+        name_dict["kyle oquinn"] = 71
+        name_dict["jimmer dredette"] = 72
+        name_dict["danilo gallinai"] = 77
+        name_dict["alan crabbe"] = 67
+        name_dict["joey dorsey"] = 70
+        name_dict["jerome jordan"] = 70
+        name_dict["rasual butler"] = 71
+        name_dict["jason maxiell"] = 68
+
+
+
+
+
 
 
 def get_ratings(name_set):

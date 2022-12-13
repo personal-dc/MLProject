@@ -23,14 +23,17 @@ def map_data(df):
     loc_map = {'H':1, 'A':0}
     shot_made_map = {'made':1, 'missed': 0}
     two_pt_map = {2:1, 3: 0}
+    name_dict = ps.get_ratings(name_set)
     new_wins = df['W'].map(win_map)
     new_loc = df['LOCATION'].map(loc_map)
     new_shot_made = df['SHOT_RESULT'].map(shot_made_map)
     new_2_pt = df['PTS_TYPE']
+    new_player_name = df['player_name'].map(name_dict)
     df.update(new_wins)
     df.update(new_loc)
     df.update(new_shot_made)
     df.update(new_2_pt)
+    df.update(new_player_name)
     df['SHOT_CLOCK'] = df['SHOT_CLOCK'].map(lambda time : shot_clock_map(time))
     df['GAME_CLOCK'] = df['GAME_CLOCK'].map(lambda x: int(x.split(":")[0])*60 + int(x.split(":")[1]))
 
