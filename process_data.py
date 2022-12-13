@@ -6,11 +6,12 @@ def get_stats(df):
     # print(df)
     column_names = list(df.columns.values)
     # print(column_names)
+    
+def get_player_names(df):
     global name_set
     name_set = set()
     for item in df['player_name'].iteritems():
         name_set.add(item[1])
-    # print(name_set)
 
 def shot_clock_map(time):
     if pd.isna(float(time)):
@@ -19,6 +20,7 @@ def shot_clock_map(time):
         return time
 
 def map_data(df):
+    get_player_names(df)
     win_map = {'W':1, 'L':0}
     loc_map = {'H':1, 'A':0}
     shot_made_map = {'made':1, 'missed': 0}
@@ -27,7 +29,7 @@ def map_data(df):
     new_wins = df['W'].map(win_map)
     new_loc = df['LOCATION'].map(loc_map)
     new_shot_made = df['SHOT_RESULT'].map(shot_made_map)
-    new_2_pt = df['PTS_TYPE']
+    new_2_pt = df['PTS_TYPE'].map(two_pt_map)
     new_player_name = df['player_name'].map(name_dict)
     df.update(new_wins)
     df.update(new_loc)
@@ -60,11 +62,12 @@ def go():
 
 
 nba_df = pd.read_csv("./shot_logs.csv")
-# processed_df = nba_df.drop(['MATCHUP', 'GAME_ID', 'player_id', 'CLOSEST_DEFENDER_PLAYER_ID'], axis = 1)
 processed_df = nba_df.drop(['MATCHUP', 'GAME_ID', 'player_id', 'CLOSEST_DEFENDER_PLAYER_ID', 'FGM', 'PTS', 'CLOSEST_DEFENDER'], axis = 1)
 
-get_stats(processed_df)
+# get_stats(processed_df)
+
 # go()
 
-name_dict = ps.get_ratings(name_set)
+# print(processed_df.head(10))
+
 # print(name_dict)
