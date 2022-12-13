@@ -10,7 +10,7 @@ def get_stats(df):
     name_set = set()
     for item in df['player_name'].iteritems():
         name_set.add(item[1])
-    print(name_set)
+    # print(name_set)
 
 def shot_clock_map(time):
     if pd.isna(float(time)):
@@ -67,4 +67,4 @@ get_stats(processed_df)
 # go()
 
 name_dict = ps.get_ratings(name_set)
-print(name_dict)
+# print(name_dict)
