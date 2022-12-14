@@ -1,6 +1,6 @@
-to-do
+TODO
 - plot multi-dimensional data in 2d (on piazza)
-- use cross validation or hyper-parameter tuning on our models (using GridSearchCV)
+- ~~use cross validation or hyper-parameter tuning on our models (using GridSearchCV)~~
 - use different classifiers in sklearn
 - read more about DNNs that are used specifically for such use cases (https://towardsdatascience.com/designing-your-neural-networks-a5e4617027ed)
 - use XGB and refer to https://docs.aws.amazon.com/sagemaker/latest/dg/xgboost-HowItWorks.html
