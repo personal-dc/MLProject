@@ -21,7 +21,7 @@ param_grid = {'C': [0.1, 1, 10],
               'gamma': [1, 0.1, 0.01],
               'kernel': ['rbf', 'poly', 'linear']} 
   
-grid = GridSearchCV(classifier, param_grid, refit = True, verbose = 3)
+grid = GridSearchCV(classifier, param_grid, refit = True, verbose = 5, cv = 3)
   
 # fitting the model for grid search
 grid.fit(X_train, y_train)
