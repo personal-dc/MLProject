@@ -1,0 +1,70 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+
+
+
+\title{PROJECT TITLE}
+
+\author{Dhruv Chauhan, Kevin Chen}
+
+\date{Wed December  14}
+
+\begin{document}
+
+\maketitle
+
+\abstract
+Please provide a brief abstract of your project.
+
+\section{Introduction}
+
+
+\section{Proposed Project}
+Please describe whether you will use classification or regression to address the problem. Describe dataset(s) that you plan to perform experiments on. Be precise in describing the information about the datasets: how many samples, how many classes, if feature vectors of samples are already available or you plan to extract feature (if so, how), whether other preprocessing is needed. Please note that your submission must be at most 2 pages long.
+
+
+
+paper structure
+- intro
+The game of basketball produces a lot of data, and we can use that data to predict whether a shot is in or not and this can benefit basketball coaches/managers by using the data they have to know what sort of strategies and player matchups could be good to put, giving them better odds of winning the championship. Therefore, dhruv and I wanted to get an A in this class so we slapped together a couple of models including Logistic Regression, SVM, KNN, and a few deep neural networks to try and figure out how we can put our life savings into draftkings and become millionares before the age of 20.
+
+The game of basketball produces a large quantity of data over a single match, from the overall game states to the performances of individual players. Given the large amount of data readily presented by the NBA, it is a prime field for testing machine learning techniques.
+
+
+- problem statement
+The goal of our project was to create a model that can predict the outcome of a basketball shot from its descriptive data such as where the shot was released, what state the game was in, and how many dribbles were taken before the shot. That is, develop an algorithm where given data $d_i$, classify the position as either successful or not successful.
+- relevance of the project
+The relevance of this project is rather limited in scope. Giving basketball theorists and team managers feedback on their selections and tactics could potentially make an impact on the metagame of basketball. However, it is not likely that new strategies will come from analyzing data that has been collected from matches played using conventional basketball theory. Therefore, while such a model classifying shots as successes or failures could be a guide for basketball intuition for those who are unfamiliar with the game, it may not be as much help in thinking of new strategies on the professional level. It may also be helpful for the players, reinforcing theory helping them understand how to score. (not really)
+The project may however be relevant on the casual player and fan, giving them an avenue towards understanding the tactics used by professionals by classifying an angle of attack as successful or not.
+(may also be used by quant betting bots to arbitrage their bets shot to shot lol)
+
+- technical approaches (data cleaning, svm, logistic, DNN)
+
+The Dataset:
+We used a dataset containing information on shots during the 2014-2015 season of the NBA scraped using the NBA's official REST API. *table containing info that is presented also on kaggle*.
+
+Our data set had a few extraneous details such as player names. One data column we removed in data processing was the pts column which contained the points gained from the shot, which was either 0, 2, or 3. Clearly, this gave away the result of the shot and before we realized to remove this column every classifier we used had a perfect record on the data. Similar columns representing the shot result like FGM (field goal made) were also removed and instead as the labels on the data. The data also had some erroneous spellings of player names, confusing players like Tim Hardaway for "Time" Hardaway. This was repaired manually as part of our data cleaning process. Boolean features like type of shot (two vs three pointers) were mapped to 1s and 0s. As we wanted the model to be able to predict shot success regardless of individual player matchup, the player name column was cleaned out.
+In later trials, player names was mapped to their corresponding 2014-2015 player rating in the official NBA 2k series which represents an overall evaluation of the player's skills. This potentially could have helped our models determine success as a stronger player in terms of physicality would intuitively have an advantage over a less physially gifted player.
+
+Models used:
+Logistic Regrssion
+SVM
+Deep Neural network:
+128 nodes, 256 nodes, 1-5 hidden layers.
+
+
+- experimental results (accuracies, plots, AUC performance metric?)
+Literally every single model we tried only had a maximum performance of 61 percent.
+Plot hyperparameter tuning of DNN here.
+- training the model
+Training the model for
+- testing the model
+- optimizations (if relevant)
+- conclusion
+Although shot data provides a clear image of the progression of a game of basketball, There are various other factors such as team tactics, defensive and offenseive, that limit the prediction of shot success based on matchu data aone. Our results matched those of (citations here) related studies of basketball shot success rates in that they also achieved a similar accuracy of 61 percent. While other studies do incorporate additional stuffs, we do pretty good hi dhruv.
+
+
+Further research: Analyze all 5 players on the court, and use generative adversarial network to create an offense-defense and generate tactics. Also, instead of only considering the 1v1 like we did because of our data, analyze all players on the field and report an estimated point value from the positions and match-ups, giving a better view of the whole game and possibly generating new tactics.
+This
+\end{document}
