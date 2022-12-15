@@ -8,10 +8,10 @@ patch_sklearn()
 
 processor.go()
 
-X_train = processor.X_train
-y_train = processor.y_train
-X_test = processor.X_test
-y_test = processor.y_test
+X_train = processor.X_train_sklearn
+y_train = processor.y_train_sklearn
+X_test = processor.X_test_sklearn
+y_test = processor.y_test_sklearn
 X = np.append(X_train, X_test, axis = 0)
 y = np.append(y_train, y_test)
 
