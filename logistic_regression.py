@@ -2,10 +2,10 @@ from sklearn.linear_model import LogisticRegression
 import process_data as processor
 import numpy as np
 from sklearn.model_selection import GridSearchCV
-from sklearnex import patch_sklearn 
+# from sklearnex import patch_sklearn
 
 processor.go()
-patch_sklearn()
+# patch_sklearn()
 
 X_train = processor.X_train
 y_train = processor.y_train
