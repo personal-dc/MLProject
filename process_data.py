@@ -68,6 +68,4 @@ processed_df = nba_df.drop(['MATCHUP', 'GAME_ID', 'player_id', 'CLOSEST_DEFENDER
 
 # go()
 
-# print(processed_df.head(10))
-
 # print(name_dict)
