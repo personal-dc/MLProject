@@ -3,7 +3,7 @@ import player_scrape as ps
 from sklearn.model_selection import train_test_split
 
 def get_stats(df):
-    # print(df)
+    print(df)
     column_names = list(df.columns.values)
     # print(column_names)
     
@@ -60,8 +60,8 @@ def convert_to_XGB(df):
     X_names = df.columns.to_list()
     X_names.remove('SHOT_RESULT')
     y_name = 'SHOT_RESULT'
-    X_train_xgb, X_test_xgb, y_train_xgb, y_test_xgb = train_test_split(df[X_names] , df[y_name], test_size=0.50, random_state=42)
-    X_validation_xgb, X_test_xgb, y_validation_xgb, y_test_xgb = train_test_split(df[X_names] , df[y_name], test_size=0.50, random_state=42)
+    X_train_xgb, X_test_xgb, y_train_xgb, y_test_xgb = train_test_split(df[X_names] , df[y_name], test_size=0.50)
+    X_validation_xgb, X_test_xgb, y_validation_xgb, y_test_xgb = train_test_split(df[X_names] , df[y_name], test_size=0.50)
 
 
 def go():

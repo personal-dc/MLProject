@@ -15,19 +15,21 @@ class BBallNeuralNet(nn.Module):
     def __init__(self):
         super().__init__()
         self.linear_relu_stack = nn.Sequential(
+            
             nn.Linear(13, 13),
             nn.Identity(),
             nn.Linear(13, 256),
-            nn.Sigmoid(),
+            nn.ReLU(),
             nn.Linear(256, 256),
-            nn.Sigmoid(),
+            nn.ReLU(),
             nn.Linear(256, 256),
-            nn.Sigmoid(),
+            nn.ReLU(),
             nn.Linear(256, 256),
-            nn.Sigmoid(),
+            nn.ReLU(),
             nn.Linear(256, 256),
             nn.Sigmoid(),
             nn.Linear(256, 2)
+
         )
 
     def forward(self, x):
@@ -48,10 +50,10 @@ class BBallNeuralNet(nn.Module):
 def packItUp(config):
     processor.go()
 
-    X_train = torch.from_numpy((processor.X_train).astype(float)).type(torch.FloatTensor)
-    y_train = torch.from_numpy(processor.y_train.astype(int)).type(torch.LongTensor)
-    X_test = torch.from_numpy(processor.X_test.astype(float)).type(torch.FloatTensor)
-    y_test = torch.from_numpy(processor.y_test.astype(int)).type(torch.LongTensor)
+    X_train = torch.from_numpy((processor.X_train_sklearn).astype(float)).type(torch.FloatTensor)
+    y_train = torch.from_numpy(processor.y_train_sklearn.astype(int)).type(torch.LongTensor)
+    X_test = torch.from_numpy(processor.X_test_sklearn.astype(float)).type(torch.FloatTensor)
+    y_test = torch.from_numpy(processor.y_test_sklearn.astype(int)).type(torch.LongTensor)
 
     ds = TensorDataset(X_train, y_train)
     ts = TensorDataset(X_test, y_test)
@@ -69,7 +71,7 @@ def packItUp(config):
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=config["lr"])
 
-    epochs = 15
+    epochs = 10
     for t in range(epochs):
         # print(f"Epoch {t + 1}\n-------------------------------")
         train(train_dataLoader, model, loss_fn, optimizer)
@@ -78,6 +80,9 @@ def packItUp(config):
         if t % 5 == 0:
             # This saves the model to the trial directory
             torch.save(model.state_dict(), "./models")
+    
+    plt.scatter([i for i in range(epochs)], test_acc)
+    plt.show()
 
 def train(dataloader, model, loss_fn, optimizer):
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -99,6 +104,8 @@ def train(dataloader, model, loss_fn, optimizer):
             loss, current = loss.item(), batch * len(X)
             # print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
 
+test_acc = []
+
 def test(dataloader, model, loss_fn):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     size = len(dataloader.dataset)
@@ -114,6 +121,7 @@ def test(dataloader, model, loss_fn):
     test_loss /= num_batches
     correct /= size
     # print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+    test_acc.append(correct)
     return correct
 
 
