@@ -1,21 +1,31 @@
 import torch
 from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
-
+import matplotlib.pyplot as plt
+import seaborn as sns
 import numpy as np
 import process_data as processor
-import matplotlib
-matplotlib.use('TkAgg')
-import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
 
-import torch.optim as optim
-from ray import tune
+processor.go()
+
+X_train = torch.from_numpy((processor.X_train_sklearn).astype(float)).type(torch.FloatTensor)
+y_train = torch.from_numpy(processor.y_train_sklearn.astype(int)).type(torch.LongTensor)
+X_test = torch.from_numpy(processor.X_test_sklearn.astype(float)).type(torch.FloatTensor)
+y_test = torch.from_numpy(processor.y_test_sklearn.astype(int)).type(torch.LongTensor)
+
+ds = TensorDataset(X_train, y_train)
+ts = TensorDataset(X_test, y_test)
+batch_size = 64
+
+train_dataLoader = DataLoader(ds, batch_size=batch_size)
+test_dataLoader = DataLoader(ts, batch_size=batch_size)
 
 class BBallNeuralNet(nn.Module):
     def __init__(self):
         super().__init__()
         self.linear_relu_stack = nn.Sequential(
-            
             nn.Linear(13, 13),
             nn.Identity(),
             nn.Linear(13, 256),
@@ -36,56 +46,15 @@ class BBallNeuralNet(nn.Module):
         logits = self.linear_relu_stack(x)
         return logits
 
-# class BBallDataset(Dataset):
-#     def __init__(self, data, labels):
-#         self.data = data
-#         self.labels = labels
-#
-#     def __len__(self):
-#         return len(self.data)
-#
-#     def __getitem__(self, index):
-#         return self.data[index], self.labels[index]
+device = "cuda" if torch.cuda.is_available() else "cpu"
+print(f"Using {device} device")
 
-def packItUp(config):
-    processor.go()
+model = BBallNeuralNet().to(device)
 
-    X_train = torch.from_numpy((processor.X_train_sklearn).astype(float)).type(torch.FloatTensor)
-    y_train = torch.from_numpy(processor.y_train_sklearn.astype(int)).type(torch.LongTensor)
-    X_test = torch.from_numpy(processor.X_test_sklearn.astype(float)).type(torch.FloatTensor)
-    y_test = torch.from_numpy(processor.y_test_sklearn.astype(int)).type(torch.LongTensor)
-
-    ds = TensorDataset(X_train, y_train)
-    ts = TensorDataset(X_test, y_test)
-    batch_size = 50
-
-    train_dataLoader = DataLoader(ds, batch_size=batch_size)
-    test_dataLoader = DataLoader(ts, batch_size=batch_size)
-
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-
-    # print(f"Using {device} device")
-
-    model = BBallNeuralNet().to(device)
-
-    loss_fn = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=config["lr"])
-
-    epochs = 10
-    for t in range(epochs):
-        # print(f"Epoch {t + 1}\n-------------------------------")
-        train(train_dataLoader, model, loss_fn, optimizer)
-        accuracy = test(test_dataLoader, model, loss_fn)
-        tune.report(mean_accuracy = accuracy)
-        if t % 5 == 0:
-            # This saves the model to the trial directory
-            torch.save(model.state_dict(), "./models")
-    
-    plt.scatter([i for i in range(epochs)], test_acc)
-    plt.show()
+loss_fn = nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
 def train(dataloader, model, loss_fn, optimizer):
-    device = "cuda" if torch.cuda.is_available() else "cpu"
     size = len(dataloader.dataset)
     model.train()
     for batch, (X, y) in enumerate(dataloader):
@@ -104,10 +73,7 @@ def train(dataloader, model, loss_fn, optimizer):
             loss, current = loss.item(), batch * len(X)
             # print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
 
-test_acc = []
-
 def test(dataloader, model, loss_fn):
-    device = "cuda" if torch.cuda.is_available() else "cpu"
     size = len(dataloader.dataset)
     num_batches = len(dataloader)
     model.eval()
@@ -120,33 +86,20 @@ def test(dataloader, model, loss_fn):
             correct += (pred.argmax(1) == y).type(torch.float).sum().item()
     test_loss /= num_batches
     correct /= size
-    # print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
-    test_acc.append(correct)
-    return correct
+    print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
 
+epochs = 10
+for t in range(epochs):
+    print(f"Epoch {t+1}\n-------------------------------")
+    train(train_dataLoader, model, loss_fn, optimizer)
+    test(test_dataLoader, model, loss_fn)
+    if t == 9:
+        y_pred = model(X_test).argmax(1)
+        c_matrix = confusion_matrix(y_test, y_pred)
 
-# print("Done!")
-search_space = {
-    "lr": 0.001,
-    "momentum": tune.uniform(0.1, 0.9),
-}
-
-tuner = tune.Tuner(
-    packItUp,
-    param_space=search_space,
-)
-results = tuner.fit()
-
-dfs = {result.log_dir: result.metrics_dataframe for result in results}
-print([d.mean_accuracy for d in dfs.values()])
-
-# def callTrain(config, trainLoader, testLoader):
-
-#
-# analysis = tune.run(
-#     train_mnist, config={"lr": tune.grid_search([0.001, 0.01, 0.1])})
-
-# print("Best config: ", analysis.get_best_config(metric="mean_accuracy"))
-#
-# # Get a dataframe for analyzing trial results.
-# df = analysis.dataframe()
+        sns.heatmap(c_matrix, annot=True, fmt='d')
+        plt.xlabel('Predicted Class')
+        plt.ylabel('True Class')
+        plt.show()
+    
+print("Done!")

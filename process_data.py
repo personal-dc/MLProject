@@ -60,8 +60,8 @@ def convert_to_XGB(df):
     X_names = df.columns.to_list()
     X_names.remove('SHOT_RESULT')
     y_name = 'SHOT_RESULT'
-    X_train_xgb, X_test_xgb, y_train_xgb, y_test_xgb = train_test_split(df[X_names] , df[y_name], test_size=0.50)
-    X_validation_xgb, X_test_xgb, y_validation_xgb, y_test_xgb = train_test_split(df[X_names] , df[y_name], test_size=0.50)
+    X_train_xgb, X_test_xgb, y_train_xgb, y_test_xgb = train_test_split(df[X_names] , df[y_name], test_size=0.2, random_state=42)
+    X_validation_xgb, X_test_xgb, y_validation_xgb, y_test_xgb = train_test_split(df[X_names] , df[y_name], test_size=0.20, random_state=42)
 
 
 def go():
@@ -73,8 +73,3 @@ def go():
 nba_df = pd.read_csv("./shot_logs.csv")
 processed_df = nba_df.drop(['MATCHUP', 'GAME_ID', 'player_id', 'CLOSEST_DEFENDER_PLAYER_ID', 'FGM', 'PTS', 'CLOSEST_DEFENDER'], axis = 1)
 
-# get_stats(processed_df)
-
-# go()
-
-# print(name_dict)
