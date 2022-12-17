@@ -8,11 +8,10 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
 
-dataset = pd.read_csv("./shot_logs.csv")
-# print(dataset.describe())
-
+# getting the data from the dataframe
 processor.go()
 
+# assigning data to relevant variables
 X_train = processor.X_train_xgb
 y_train = processor.y_train_xgb
 X_test = processor.X_test_xgb
@@ -20,22 +19,22 @@ y_test = processor.y_test_xgb
 X_validation = processor.X_validation_xgb
 y_validation = processor.y_validation_xgb
 
-
-# xgb_model = XGBClassifier().fit(X_train,y_train)
-
+# creating the model and getting accuracy
 xgb_model = XGBClassifier(max_depth = 3, learning_rate = 1, min_child_weight = 1, n_estimators = 1).fit(X_train, y_train)
 predictions = xgb_model.predict(X_test)
 actuals = y_test        
 precision=precision_score(actuals, predictions)
 print(precision)
 
-confusion_matrix = confusion_matrix(y_test, predictions)
+# setting up the confusion matrix
+# confusion_matrix = confusion_matrix(y_test, predictions)
 
-sns.heatmap(confusion_matrix, annot=True, fmt='d')
-plt.xlabel('Predicted Class')
-plt.ylabel('True Class')
-plt.show()
+# sns.heatmap(confusion_matrix, annot=True, fmt='d')
+# plt.xlabel('Predicted Class')
+# plt.ylabel('True Class')
+# plt.show()
 
+# setting up the grid for hyperparameter tuning
 # parameters_for_testing = {
 #     'min_child_weight':[1, 0.1, 0.001, 0.0001],
 #     'learning_rate': [1, 0.1, 0.001, 0.0001],
@@ -52,9 +51,3 @@ plt.show()
 # print (gsearch1.best_params_)
 # print('best score')
 # print (gsearch1.best_score_)  
-
-# mean_test_scores = gsearch1.cv_results_['mean_test_score']
-# plt.scatter(parameters_for_testing['n_estimators'], mean_test_scores)
-# plt.xlabel('number of trees')
-# plt.ylabel('Mean Test Score')
-# plt.show()

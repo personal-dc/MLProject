@@ -2,18 +2,20 @@ import pandas as pd
 import player_scrape as ps
 from sklearn.model_selection import train_test_split
 
+# method to get an idea about the dataframe
 def get_stats(df):
     print(df)
     column_names = list(df.columns.values)
     # print(column_names)
     
+# method to get the players in the dataframe
 def get_player_names(df):
     global name_set
     name_set = set()
     for item in df['player_name'].iteritems():
         name_set.add(item[1])
 
-
+# method to clean nan from the dataframe
 def update_shot_clock(ds):
     new_col = []
     for index, value in ds['SHOT_CLOCK'].iteritems():
@@ -23,6 +25,7 @@ def update_shot_clock(ds):
             new_col.append(value)
     ds['SHOT_CLOCK'] = new_col
 
+# method to convert all data to numbers
 def map_data(df):
     get_player_names(df)
     name_dict = ps.get_ratings(name_set)
@@ -34,6 +37,7 @@ def map_data(df):
     df['GAME_CLOCK'] = df['GAME_CLOCK'].map(lambda x: int(x.split(":")[0])*60 + int(x.split(":")[1]))
     update_shot_clock(df)
 
+# method to convert data to make it usable for sklearn models
 def convert_to_logisticsvm(df):
     global X_train_sklearn
     global y_train_sklearn
@@ -50,6 +54,7 @@ def convert_to_logisticsvm(df):
     y_test_sklearn = test[y_name].values
     y_test_sklearn = y_test_sklearn.astype('int')
 
+# method to convert data to make it usable for XGB models
 def convert_to_XGB(df):
     global X_train_xgb
     global y_train_xgb
@@ -63,13 +68,14 @@ def convert_to_XGB(df):
     X_train_xgb, X_test_xgb, y_train_xgb, y_test_xgb = train_test_split(df[X_names] , df[y_name], test_size=0.2, random_state=42)
     X_validation_xgb, X_test_xgb, y_validation_xgb, y_test_xgb = train_test_split(df[X_names] , df[y_name], test_size=0.20, random_state=42)
 
-
+# method to start cleaning and converting data
 def go():
     map_data(processed_df)
     convert_to_logisticsvm(processed_df)
     convert_to_XGB(processed_df)
 
 
+# load the dataset and drop irrelevant columns
 nba_df = pd.read_csv("./shot_logs.csv")
 processed_df = nba_df.drop(['MATCHUP', 'GAME_ID', 'player_id', 'CLOSEST_DEFENDER_PLAYER_ID', 'FGM', 'PTS', 'CLOSEST_DEFENDER'], axis = 1)
 

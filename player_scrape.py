@@ -9,6 +9,7 @@ html = response.text
 
 soup = BeautifulSoup(html, "html.parser")
 
+# use bs4 to scrape player ratings off of the internet
 def make_name_dict():
     # Find the table containing the player ratings
     table = soup.find("table", {"class": "hh-salaries-ranking-table"})
@@ -29,7 +30,7 @@ def make_name_dict():
         # Extract the player name and rating from the cells
         name_dict[str(name_cell.text.strip()).lower()] = int(rating_cell.text.strip())
 
-        #manually adding
+        # manually fixing typos in dataset
         name_dict["greg smith"] = 61
         name_dict["dirk nowtizski"] = 84
         name_dict["time hardaway jr"] = 69
@@ -59,17 +60,11 @@ def make_name_dict():
         name_dict["rasual butler"] = 71
         name_dict["jason maxiell"] = 68
 
-
-
-
-
-
-
+# method to set the ratings
 def get_ratings(name_set):
     make_name_dict()
     new_dict = {}
     for name in name_set:
         if name in name_dict:
             new_dict[name] = name_dict[name]
-
     return new_dict

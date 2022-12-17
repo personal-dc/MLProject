@@ -9,8 +9,10 @@ import matplotlib.pyplot as plt
 
 patch_sklearn()
 
+# get the data from the data fram
 processor.go()
 
+# assign it to relevant variables
 X_train = processor.X_train_sklearn
 y_train = processor.y_train_sklearn
 X_test = processor.X_test_sklearn
@@ -20,6 +22,7 @@ y = np.append(y_train, y_test)
 
 classifier = svm.SVC()
 
+# set up the grid for hyperparameter tuning
 # param_grid = {'C': [0.1, 1, 10], 
 #               'gamma': [1, 0.1, 0.01],
 #               'kernel': ['rbf', 'poly', 'linear']} 
@@ -29,13 +32,14 @@ classifier = svm.SVC()
 # # fitting the model for grid search
 # grid.fit(X_train, y_train)
 
-classifier.fit(X_train, y_train)
-print(classifier.score(X_test, y_test))
+# classifier.fit(X_train, y_train)
+# print(classifier.score(X_test, y_test))
 
-y_pred = classifier.predict(X_test)
-confusion_matrix = confusion_matrix(y_test, y_pred)
+# setting up the confusion matrix
+# y_pred = classifier.predict(X_test)
+# confusion_matrix = confusion_matrix(y_test, y_pred)
 
-sns.heatmap(confusion_matrix, annot=True, fmt='d')
-plt.xlabel('Predicted Class')
-plt.ylabel('True Class')
-plt.show()
+# sns.heatmap(confusion_matrix, annot=True, fmt='d')
+# plt.xlabel('Predicted Class')
+# plt.ylabel('True Class')
+# plt.show()

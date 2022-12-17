@@ -7,9 +7,11 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
 
+# get data from the dataset
 processor.go()
 patch_sklearn()
 
+# load them into relevant variables
 X_train = processor.X_train_sklearn
 y_train = processor.y_train_sklearn
 X_test = processor.X_test_sklearn
@@ -17,15 +19,19 @@ y_test = processor.y_test_sklearn
 X = np.append(X_train, X_test, axis = 0)
 y = np.append(y_train, y_test)
 
+# set up a a grid for hyperparameter tuning
 # param_grid = {
 #     'C': np.logspace(-4, 4, 50)
 # }
 
 classifier = LogisticRegression(max_iter=500)
 
+# make the classifier and fit the data in it
 classifier.fit(X_train, y_train)
 print(classifier.score(X_test, y_test))
 y_pred = classifier.predict(X_test)
+
+# tune hyperparameters using GridSearchCV and get the best hyperparameters
 
 # grid_search = GridSearchCV(classifier, param_grid, cv=5, verbose = 1)
 # grid_search.fit(X, y)
@@ -38,9 +44,10 @@ y_pred = classifier.predict(X_test)
 # plt.ylabel('Mean Test Score')
 # plt.show()
 
-confusion_matrix = confusion_matrix(y_test, y_pred)
+# create a confusion matrix 
+# confusion_matrix = confusion_matrix(y_test, y_pred)
 
-sns.heatmap(confusion_matrix, annot=True, fmt='d')
-plt.xlabel('Predicted Class')
-plt.ylabel('True Class')
-plt.show()
+# sns.heatmap(confusion_matrix, annot=True, fmt='d')
+# plt.xlabel('Predicted Class')
+# plt.ylabel('True Class')
+# plt.show()
